@@ -32,12 +32,9 @@
 //! > that minimizes the impact of this transition for client software,
 //! > allowing client software to access domains that are valid under either system.
 
-#[macro_use] extern crate matches;
-extern crate unicode_bidi;
-extern crate unicode_normalization;
+use unic_idna;
 
-pub mod punycode;
-pub mod uts46;
+pub use unic_idna::Errors;
 
 /// The [domain to ASCII](https://url.spec.whatwg.org/#concept-domain-to-ascii) algorithm.
 ///
@@ -46,8 +43,8 @@ pub mod uts46;
 /// and using Punycode as necessary.
 ///
 /// This process may fail.
-pub fn domain_to_ascii(domain: &str) -> Result<String, uts46::Errors> {
-    uts46::to_ascii(domain, uts46::Flags {
+pub fn domain_to_ascii(domain: &str) -> Result<String, Errors> {
+    unic_idna::to_ascii(domain, unic_idna::Flags {
         use_std3_ascii_rules: false,
         transitional_processing: true, // XXX: switch when Firefox does
         verify_dns_length: false,
@@ -62,8 +59,8 @@ pub fn domain_to_ascii(domain: &str) -> Result<String, uts46::Errors> {
 ///
 /// This may indicate [syntax violations](https://url.spec.whatwg.org/#syntax-violation)
 /// but always returns a string for the mapped domain.
-pub fn domain_to_unicode(domain: &str) -> (String, Result<(), uts46::Errors>) {
-    uts46::to_unicode(domain, uts46::Flags {
+pub fn domain_to_unicode(domain: &str) -> (String, Result<(), Errors>) {
+    unic_idna::to_unicode(domain, unic_idna::Flags {
         use_std3_ascii_rules: false,
 
         // Unused:

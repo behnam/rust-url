@@ -19,6 +19,7 @@ use percent_encoding::{
     SIMPLE_ENCODE_SET, DEFAULT_ENCODE_SET, USERINFO_ENCODE_SET, QUERY_ENCODE_SET,
     PATH_SEGMENT_ENCODE_SET
 };
+use idna;
 
 pub type ParseResult<T> = Result<T, ParseError>;
 
@@ -66,8 +67,8 @@ impl fmt::Display for ParseError {
     }
 }
 
-impl From<::idna::uts46::Errors> for ParseError {
-    fn from(_: ::idna::uts46::Errors) -> ParseError { ParseError::IdnaError }
+impl From<idna::Errors> for ParseError {
+    fn from(_: idna::Errors) -> ParseError { ParseError::IdnaError }
 }
 
 #[derive(Copy, Clone)]
